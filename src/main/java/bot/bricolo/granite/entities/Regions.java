@@ -1,4 +1,4 @@
-package bot.bricolo.granite;
+package bot.bricolo.granite.entities;
 
 import net.dv8tion.jda.api.Region;
 

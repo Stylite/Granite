@@ -1,5 +1,7 @@
 package bot.bricolo.granite;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 class AndesitePlayer {
@@ -13,8 +15,30 @@ class AndesitePlayer {
         this.assignNode();
     }
 
+    //******************//
+    // Player functions //
+    //******************//
+
+    //****************//
+    // Event handling //
+    //****************//
+
+    //****************//
+    // Voice handling //
+    //****************//
+
+    //***********//
+    // Internals //
+    //***********//
     private void assignNode() {
-        int index = ThreadLocalRandom.current().nextInt(granite.nodes.size());
-        this.node = granite.nodes.get(index);
+        List<AndesiteNode> nodes = new ArrayList<>();
+        granite.nodes.forEach((node) -> {
+            if (node.connected) {
+                nodes.add(node);
+            }
+        });
+
+        int index = ThreadLocalRandom.current().nextInt(nodes.size());
+        this.node = nodes.get(index);
     }
 }

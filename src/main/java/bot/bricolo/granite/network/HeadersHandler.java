@@ -10,7 +10,7 @@ public class HeadersHandler extends ChannelOutboundHandlerAdapter {
     private final String password;
     private final String userId;
 
-    HeadersHandler(String password, String userId) {
+    public HeadersHandler(String password, String userId) {
         this.password = password;
         this.userId = userId;
     }
