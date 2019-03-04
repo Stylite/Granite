@@ -11,8 +11,8 @@ import java.util.*;
 @SuppressWarnings("WeakerAccess")
 public class Granite {
     public final Logger LOG = LoggerFactory.getLogger(Granite.class);
-    final List<AndesiteNode> nodes = new ArrayList<>();
-    final Map<Long, AndesitePlayer> players = new HashMap<>();
+    private final List<AndesiteNode> nodes = new ArrayList<>();
+    private final Map<Long, AndesitePlayer> players = new HashMap<>();
 
     //*****************//
     // Node management //
@@ -65,4 +65,17 @@ public class Granite {
     //*******//
     // Utils //
     //*******//
+
+    //****************//
+    // Internal Utils //
+    //****************//
+    List<AndesiteNode> getAvailableNodes () {
+        List<AndesiteNode> availableNodes = new ArrayList<>();
+        nodes.forEach((node) -> {
+            if (node.connected) {
+                availableNodes.add(node);
+            }
+        });
+        return availableNodes;
+    }
 }

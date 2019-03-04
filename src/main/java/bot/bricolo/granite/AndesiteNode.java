@@ -1,5 +1,6 @@
 package bot.bricolo.granite;
 
+import bot.bricolo.granite.entities.EventBufferPayload;
 import bot.bricolo.granite.entities.IJsonSerializable;
 import bot.bricolo.granite.network.HeadersHandler;
 import bot.bricolo.granite.network.SocketInitializer;
@@ -18,20 +19,24 @@ public class AndesiteNode {
     private final Granite granite;
     private final String host;
     private final int port;
+    private final String password;
+    private final String userId;
     private final List<Region> regions;
     private final String name;
 
     private final NioEventLoopGroup group;
     private final Bootstrap bootstrap;
 
+    public String connectionId;
     boolean connected = false;
-    private String connectionId;
     private Channel channel;
 
     AndesiteNode(Granite granite, String host, int port, String password, String userId, List<Region> regions, String name) {
         this.granite = granite;
         this.host = host;
         this.port = port;
+        this.password = password;
+        this.userId = userId;
         this.regions = regions;
         this.name = name;
 
@@ -39,7 +44,7 @@ public class AndesiteNode {
         this.bootstrap = new Bootstrap();
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
-                .handler(new HeadersHandler(password, userId))
+                .handler(new HeadersHandler(this))
                 .handler(new SocketInitializer(this));
     }
 
@@ -51,6 +56,7 @@ public class AndesiteNode {
         channelFuture.addListener((ChannelFutureListener) future -> {
             connected = true;
             channel = future.channel();
+            send(new EventBufferPayload(30));
         });
     }
 
@@ -93,5 +99,16 @@ public class AndesiteNode {
         this.disconnect();
         granite.LOG.warn("Reconnecting in 5 seconds");
         Utils.setTimeout(this::connect, 5000);
+    }
+
+    //*********//
+    // Getters //
+    //*********//
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
