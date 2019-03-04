@@ -11,3 +11,4 @@ A powerful, intuitive and easy to use client for [Andesite](https://github.com/n
  - [ ] Add region factor to load balancing (EU traffic to EU nodes, US traffic to US nodes)
  - [ ] Automatic failover if a node is available (preferably in region)
  - [ ] Automatically switch node when region is updated (if a better one is available)
+ - [ ] SSL Support

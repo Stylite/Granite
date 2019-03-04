@@ -1,7 +1,10 @@
 plugins {
-    id 'java'
     id 'java-library'
 }
+
+def versionObj = new Version(major: 0, minor: 0, revision: 1)
+group 'bot.bricolo.granite'
+version versionObj.toString()
 
 repositories {
     mavenCentral()
@@ -13,4 +16,50 @@ dependencies {
     implementation 'net.dv8tion:JDA:4.ALPHA.0_51'
     implementation 'io.netty:netty-all:4.1.33.Final'
     implementation 'com.squareup.okhttp3:okhttp:3.13.1'
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task sourcesForRelease(type: Copy) {
+    from ('src/main/java') {
+        include '**/Version.java'
+        filter(ReplaceTokens, tokens: [
+                VERSION_MAJOR:    versionObj.major,
+                VERSION_MINOR:    versionObj.minor,
+                VERSION_REVISION: versionObj.revision,
+                COMMIT:           getCommitHash(),
+        ])
+    }
+    into 'build/filteredSrc'
+
+    includeEmptyDirs = false
+}
+
+task generateJavaSources(type: SourceTask) {
+    def javaSources = sourceSets.main.allJava.filter {
+        it.name != 'Version.java'
+    }
+    source = javaSources + sourcesForRelease.destinationDir
+
+    dependsOn sourcesForRelease
+}
+
+compileJava {
+    source = generateJavaSources.source
+
+    dependsOn generateJavaSources
+}
+
+class Version {
+    String major, minor, revision
+
+    String toString() {
+        "$major.$minor.$revision"
+    }
+}
+
+static def getCommitHash() {
+    def p = Runtime.getRuntime().exec("git rev-parse HEAD")
+    p.waitFor()
+    p.getIn().text.trim()
 }
