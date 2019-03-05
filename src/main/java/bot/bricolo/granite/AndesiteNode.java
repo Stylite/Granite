@@ -104,6 +104,14 @@ public class AndesiteNode {
     //*********//
     // Getters //
     //*********//
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
     public String getUserId() {
         return userId;
     }
