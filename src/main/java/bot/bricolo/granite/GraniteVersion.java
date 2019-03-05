@@ -1,7 +1,7 @@
 package bot.bricolo.granite;
 
 @SuppressWarnings({"ConstantConditions", "WeakerAccess", "unused"})
-public class Version {
+public class GraniteVersion {
     public static final String VERSION_MAJOR = "@VERSION_MAJOR@";
     public static final String VERSION_MINOR = "@VERSION_MINOR@";
     public static final String VERSION_REVISION = "@VERSION_REVISION@";

@@ -1,7 +1,7 @@
 package bot.bricolo.granite.network;
 
 import bot.bricolo.granite.AndesiteNode;
-import bot.bricolo.granite.Version;
+import bot.bricolo.granite.GraniteVersion;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
@@ -24,7 +24,7 @@ public class HeadersHandler extends ChannelOutboundHandlerAdapter {
 
             httpResponse.headers().set("Authorization", client.getPassword());
             httpResponse.headers().set("User-Id", client.getUserId());
-            httpResponse.headers().set("User-Agent", "Granite v" + Version.VERSION + " (https://github.com/BricoloDuDimanche/Granite)");
+            httpResponse.headers().set("User-Agent", "Granite v" + GraniteVersion.VERSION + " (https://github.com/BricoloDuDimanche/Granite)");
         }
 
         super.write(ctx, msg, promise);
