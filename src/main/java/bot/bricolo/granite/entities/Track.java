@@ -1,8 +1,14 @@
 package bot.bricolo.granite.entities;
 
+import bot.bricolo.granite.Utils;
+import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 public class Track {
+    private final AudioTrack track;
     private final String lavaClass;
     private final String title;
     private final String author;
@@ -13,16 +19,23 @@ public class Track {
     private final boolean isSeekable;
     private final int position;
 
-    public Track(JSONObject jsonObject) {
-        this.lavaClass = jsonObject.getString("class");
-        this.title = jsonObject.getString("title");
-        this.author = jsonObject.getString("author");
-        this.length = jsonObject.getInt("length");
-        this.identifier = jsonObject.getString("identifier");
-        this.uri = jsonObject.getString("uri");
-        this.isStream = jsonObject.getBoolean("isStream");
-        this.isSeekable = jsonObject.getBoolean("isSeekable");
-        this.position = jsonObject.getInt("position");
+    public Track(JSONObject jsonObject) throws AudioTrackEncodingException {
+        JSONObject info = jsonObject.getJSONObject("info");
+
+        this.track = Utils.toAudioTrack(jsonObject.getString("track"));
+        this.lavaClass = info.getString("class");
+        this.title = info.getString("title");
+        this.author = info.getString("author");
+        this.length = info.getInt("length");
+        this.identifier = info.getString("identifier");
+        this.uri = info.getString("uri");
+        this.isStream = info.getBoolean("isStream");
+        this.isSeekable = info.getBoolean("isSeekable");
+        this.position = info.getInt("position");
+    }
+
+    public AudioTrack getTrack() {
+        return track;
     }
 
     public String getLavaClass() {

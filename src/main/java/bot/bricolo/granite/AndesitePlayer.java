@@ -1,5 +1,11 @@
 package bot.bricolo.granite;
 
+import bot.bricolo.granite.entities.Track;
+import bot.bricolo.granite.entities.payload.Play;
+import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
+import bot.bricolo.granite.exceptions.NoNodeAvailableException;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -17,6 +23,18 @@ class AndesitePlayer {
     //******************//
     // Player functions //
     //******************//
+    public void play(Track track) throws NoNodeAvailableException, AudioTrackEncodingException {
+        play(track.getTrack());
+    }
+
+    public void play(AudioTrack track) throws NoNodeAvailableException, AudioTrackEncodingException {
+        if (node == null || !node.connected) {
+            throw new NoNodeAvailableException();
+        }
+
+        String encodedTrack = Utils.toMessage(track);
+        node.send(new Play(encodedTrack, true));
+    }
 
     //****************//
     // Event handling //

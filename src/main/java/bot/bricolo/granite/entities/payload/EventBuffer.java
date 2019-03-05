@@ -1,11 +1,12 @@
-package bot.bricolo.granite.entities;
+package bot.bricolo.granite.entities.payload;
 
+import bot.bricolo.granite.entities.IJsonSerializable;
 import org.json.JSONObject;
 
-public class EventBufferPayload implements IJsonSerializable {
+public class EventBuffer implements IJsonSerializable {
     private final int timeout;
 
-    public EventBufferPayload(int timeout) {
+    public EventBuffer(int timeout) {
         this.timeout = timeout;
     }
 

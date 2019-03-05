@@ -1,6 +1,6 @@
 package bot.bricolo.granite;
 
-import bot.bricolo.granite.entities.EventBufferPayload;
+import bot.bricolo.granite.entities.payload.EventBuffer;
 import bot.bricolo.granite.entities.IJsonSerializable;
 import bot.bricolo.granite.network.HeadersHandler;
 import bot.bricolo.granite.network.SocketInitializer;
@@ -56,7 +56,7 @@ public class AndesiteNode {
         channelFuture.addListener((ChannelFutureListener) future -> {
             connected = true;
             channel = future.channel();
-            send(new EventBufferPayload(30));
+            send(new EventBuffer(30));
         });
     }
 
@@ -73,15 +73,15 @@ public class AndesiteNode {
     //*********//
     // Sending //
     //*********//
-    private void send(IJsonSerializable json) {
+    void send(IJsonSerializable json) {
         send(json.toJson());
     }
 
-    private void send(JSONObject json) {
+    void send(JSONObject json) {
         send(json.toString());
     }
 
-    private void send(String json) {
+    void send(String json) {
         if (connected) {
             channel.writeAndFlush(json);
         }

@@ -1,7 +1,7 @@
 package bot.bricolo.granite;
 
 import bot.bricolo.granite.entities.Track;
-import bot.bricolo.granite.exceptions.NoAvailableNodeException;
+import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
 import net.dv8tion.jda.api.Region;
 import net.dv8tion.jda.api.entities.Guild;
 import okhttp3.*;
@@ -80,15 +80,7 @@ public class Granite {
     //*******//
     // Utils //
     //*******//
-    public CompletableFuture<List<Track>> youtubeSearch(String search) {
-        return search("ytsearch:" + search);
-    }
-
-    public CompletableFuture<List<Track>> soundcloudSearch(String search) {
-        return search("scsearch:" + search);
-    }
-
-    private CompletableFuture<List<Track>> search(String search) {
+    public CompletableFuture<List<Track>> search(String search) {
         CompletableFuture<List<Track>> completableFuture = new CompletableFuture<>();
 
         int index = ThreadLocalRandom.current().nextInt(nodes.size());
@@ -124,7 +116,13 @@ public class Granite {
                 List<Track> tracks = new ArrayList<>();
                 JSONObject payload = new JSONObject(body.string());
                 JSONArray jsonTracks = payload.getJSONArray("tracks");
-                jsonTracks.forEach((track) -> tracks.add(new Track(((JSONObject) track).getJSONObject("info"))));
+                jsonTracks.forEach((track) -> {
+                    try {
+                        tracks.add(new Track((JSONObject) track));
+                    } catch (AudioTrackEncodingException e) {
+                        completableFuture.completeExceptionally(e);
+                    }
+                });
                 completableFuture.complete(tracks);
             }
         });
