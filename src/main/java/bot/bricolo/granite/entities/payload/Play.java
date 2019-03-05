@@ -18,9 +18,8 @@ public class Play implements IJsonSerializable {
 
     @Override
     public JSONObject toJson() {
-        JSONObject payload = new JSONObject();
-        payload.append("track", track);
-        payload.append("noReplace", noReplace);
-        return payload;
+        return new JSONObject()
+                .put("track", track)
+                .put("noReplace", noReplace);
     }
 }

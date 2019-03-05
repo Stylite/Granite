@@ -2,10 +2,13 @@ package bot.bricolo.granite;
 
 import bot.bricolo.granite.entities.Track;
 import bot.bricolo.granite.entities.payload.Play;
+import bot.bricolo.granite.entities.payload.VoiceServerUpdate;
 import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
 import bot.bricolo.granite.exceptions.NoNodeAvailableException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -46,6 +49,9 @@ class AndesitePlayer {
     //****************//
     // Voice handling //
     //****************//
+    void onVoiceServerUpdate(@Nonnull VoiceDispatchInterceptor.VoiceServerUpdate update) {
+        node.send(new VoiceServerUpdate(update));
+    }
 
     //***********//
     // Internals //

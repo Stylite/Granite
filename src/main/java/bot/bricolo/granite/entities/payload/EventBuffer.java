@@ -12,8 +12,7 @@ public class EventBuffer implements IJsonSerializable {
 
     @Override
     public JSONObject toJson() {
-        JSONObject payload = new JSONObject();
-        payload.append("timeout", timeout);
-        return payload;
+        return new JSONObject()
+                .put("timeout", timeout);
     }
 }
