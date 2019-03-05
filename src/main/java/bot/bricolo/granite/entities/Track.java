@@ -5,10 +5,8 @@ import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 public class Track {
-    private final AudioTrack track;
+    private final String track;
     private final String lavaClass;
     private final String title;
     private final String author;
@@ -19,10 +17,10 @@ public class Track {
     private final boolean isSeekable;
     private final int position;
 
-    public Track(JSONObject jsonObject) throws AudioTrackEncodingException {
+    public Track(JSONObject jsonObject) {
         JSONObject info = jsonObject.getJSONObject("info");
 
-        this.track = Utils.toAudioTrack(jsonObject.getString("track"));
+        this.track = jsonObject.getString("track");
         this.lavaClass = info.getString("class");
         this.title = info.getString("title");
         this.author = info.getString("author");
@@ -34,8 +32,12 @@ public class Track {
         this.position = info.getInt("position");
     }
 
-    public AudioTrack getTrack() {
+    public String getTrack() {
         return track;
+    }
+
+    public AudioTrack getAudioTrack() throws AudioTrackEncodingException {
+        return Utils.toAudioTrack(track);
     }
 
     public String getLavaClass() {

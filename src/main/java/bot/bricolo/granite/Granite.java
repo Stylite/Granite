@@ -116,13 +116,7 @@ public class Granite {
                 List<Track> tracks = new ArrayList<>();
                 JSONObject payload = new JSONObject(body.string());
                 JSONArray jsonTracks = payload.getJSONArray("tracks");
-                jsonTracks.forEach((track) -> {
-                    try {
-                        tracks.add(new Track((JSONObject) track));
-                    } catch (AudioTrackEncodingException e) {
-                        completableFuture.completeExceptionally(e);
-                    }
-                });
+                jsonTracks.forEach((track) -> tracks.add(new Track((JSONObject) track)));
                 completableFuture.complete(tracks);
             }
         });

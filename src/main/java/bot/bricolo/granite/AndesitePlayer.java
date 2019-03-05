@@ -23,17 +23,20 @@ class AndesitePlayer {
     //******************//
     // Player functions //
     //******************//
-    public void play(Track track) throws NoNodeAvailableException, AudioTrackEncodingException {
+    public void play(Track track) throws NoNodeAvailableException {
         play(track.getTrack());
     }
 
     public void play(AudioTrack track) throws NoNodeAvailableException, AudioTrackEncodingException {
+        play(Utils.toMessage(track));
+    }
+
+    private void play(String track) throws NoNodeAvailableException {
         if (node == null || !node.connected) {
             throw new NoNodeAvailableException();
         }
 
-        String encodedTrack = Utils.toMessage(track);
-        node.send(new Play(encodedTrack, true));
+        node.send(new Play(track, true));
     }
 
     //****************//
