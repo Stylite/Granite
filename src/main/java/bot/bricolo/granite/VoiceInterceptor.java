@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 public class VoiceInterceptor implements VoiceDispatchInterceptor {
     private final Granite granite;
 
-    VoiceInterceptor(Granite granite) {
+    public VoiceInterceptor(Granite granite) {
         this.granite = granite;
     }
 
