@@ -81,7 +81,7 @@ public class AndesiteNode {
         send(json.toString());
     }
 
-    void send(String json) {
+    private void send(String json) {
         if (connected) {
             channel.writeAndFlush(json);
         }

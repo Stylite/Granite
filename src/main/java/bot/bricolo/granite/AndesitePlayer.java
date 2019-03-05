@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-class AndesitePlayer {
+public class AndesitePlayer {
     private final Granite granite;
     private final Long guildId;
     private AndesiteNode node;
