@@ -25,7 +25,7 @@ public class Granite {
     private final List<AndesiteNode> nodes = new ArrayList<>();
     private final Map<Long, AndesitePlayer> players = new HashMap<>();
 
-    Granite() {
+    public Granite() {
         httpClient = new OkHttpClient();
     }
 
