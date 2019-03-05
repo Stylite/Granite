@@ -90,8 +90,18 @@ public class AndesiteNode {
     //********//
     // Events //
     //********//
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     public void onMessage(String message) {
-        System.out.println(message);
+        JSONObject payload = new JSONObject(message);
+        String op = payload.getString("op");
+        switch (op) {
+            case "connection-id":
+                connectionId = payload.getString("id");
+                break;
+            default:
+                granite.LOG.warn("Received an invalid OP: " + op);
+                break;
+        }
     }
 
     public void onNetworkError(Throwable error) {

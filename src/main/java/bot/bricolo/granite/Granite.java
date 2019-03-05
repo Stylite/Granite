@@ -1,6 +1,7 @@
 package bot.bricolo.granite;
 
 import bot.bricolo.granite.entities.Track;
+import bot.bricolo.granite.exceptions.NoAvailableNodeException;
 import net.dv8tion.jda.api.Region;
 import net.dv8tion.jda.api.entities.Guild;
 import okhttp3.*;
@@ -52,7 +53,7 @@ public class Granite {
     //*******************//
     @Nullable
     public AndesitePlayer getPlayer(Guild guild) {
-        return getOrCreatePlayer(guild.getIdLong());
+        return getPlayer(guild.getIdLong());
     }
 
     @Nullable
