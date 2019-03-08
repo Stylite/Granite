@@ -1,7 +1,6 @@
 package bot.bricolo.granite;
 
 import bot.bricolo.granite.entities.Track;
-import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
 import net.dv8tion.jda.api.Region;
 import net.dv8tion.jda.api.entities.Guild;
 import okhttp3.*;
@@ -13,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
@@ -32,20 +32,20 @@ public class Granite {
     //*****************//
     // Node management //
     //*****************//
-    public void addNode(String host, int port, String password, String userId) {
+    public void addNode(String host, int port, String password, String userId) throws URISyntaxException {
         addNode(host, port, password, userId, Arrays.asList(Region.values()));
     }
 
-    public void addNode(String host, int port, String password, String userId, String name) {
+    public void addNode(String host, int port, String password, String userId, String name) throws URISyntaxException {
         addNode(host, port, password, userId, Arrays.asList(Region.values()), name);
     }
 
-    public void addNode(String host, int port, String password, String userId, List<Region> regions) {
+    public void addNode(String host, int port, String password, String userId, List<Region> regions) throws URISyntaxException {
         addNode(host, port, password, userId, regions, "AndesiteNode@" + host + ":" + port);
     }
 
-    public void addNode(String host, int port, String password, String userId, List<Region> regions, String name) {
-        nodes.add(new AndesiteNode(this, host, port, password, userId, regions, name));
+    public void addNode(String host, int port, String password, String userId, List<Region> regions, String name) throws URISyntaxException {
+        nodes.add(AndesiteNode.makeNode(this, host, port, password, userId, regions, name));
     }
 
     //*******************//
@@ -130,7 +130,7 @@ public class Granite {
     List<AndesiteNode> getAvailableNodes() {
         List<AndesiteNode> availableNodes = new ArrayList<>();
         nodes.forEach((node) -> {
-            if (node.connected) {
+            if (node.isOpen()) {
                 availableNodes.add(node);
             }
         });

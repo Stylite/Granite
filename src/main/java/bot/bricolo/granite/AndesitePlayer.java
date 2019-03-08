@@ -35,11 +35,11 @@ public class AndesitePlayer {
     }
 
     private void play(String track) throws NoNodeAvailableException {
-        if (node == null || !node.connected) {
+        if (node == null || !node.isOpen()) {
             throw new NoNodeAvailableException();
         }
 
-        node.send(new Play(track, true));
+        node.send(new Play(guildId.toString(), track, true));
     }
 
     //****************//
@@ -56,10 +56,6 @@ public class AndesitePlayer {
     //***********//
     // Internals //
     //***********//
-    String getNodeId() {
-        return node.connectionId;
-    }
-
     private void assignNode() {
         List<AndesiteNode> nodes = granite.getAvailableNodes();
         if (nodes.size() == 0) {

@@ -1,102 +1,49 @@
 package bot.bricolo.granite;
 
+import bot.bricolo.granite.entities.AbstractSocket;
 import bot.bricolo.granite.entities.payload.EventBuffer;
-import bot.bricolo.granite.entities.IJsonSerializable;
-import bot.bricolo.granite.network.HeadersHandler;
-import bot.bricolo.granite.network.SocketInitializer;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import net.dv8tion.jda.api.Region;
+import org.java_websocket.drafts.Draft_6455;
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class AndesiteNode {
-    private final Granite granite;
-    private final String host;
-    private final int port;
-    private final String password;
-    private final String userId;
+public class AndesiteNode extends AbstractSocket {
+    private final URI uri;
+    private final Map<String, String> headers;
     private final List<Region> regions;
     private final String name;
 
-    private final NioEventLoopGroup group;
-    private final Bootstrap bootstrap;
-
-    public String connectionId;
-    boolean connected = false;
-    private Channel channel;
-
-    AndesiteNode(Granite granite, String host, int port, String password, String userId, List<Region> regions, String name) {
-        this.granite = granite;
-        this.host = host;
-        this.port = port;
-        this.password = password;
-        this.userId = userId;
+    private AndesiteNode(Granite granite, URI uri, Map<String, String> headers, List<Region> regions, String name) {
+        super(granite, uri, new Draft_6455(), headers, 10);
+        this.uri = uri;
+        this.headers = headers;
         this.regions = regions;
         this.name = name;
-
-        this.group = new NioEventLoopGroup();
-        this.bootstrap = new Bootstrap();
-        bootstrap.group(group)
-                .channel(NioSocketChannel.class)
-                .handler(new HeadersHandler(this))
-                .handler(new SocketInitializer(this));
-    }
-
-    //***********************//
-    // Connection Management //
-    //***********************//
-    private void connect() {
-        ChannelFuture channelFuture = bootstrap.connect(host + "/websocket", port);
-        channelFuture.addListener((ChannelFutureListener) future -> {
-            connected = true;
-            channel = future.channel();
-            send(new EventBuffer(30));
-        });
-    }
-
-    private void disconnect() {
-        channel.close();
-        channel = null;
-        connected = false;
-    }
-
-    public void shutdown() {
-        group.shutdownGracefully();
-    }
-
-    //*********//
-    // Sending //
-    //*********//
-    void send(IJsonSerializable json) {
-        send(json.toJson());
-    }
-
-    void send(JSONObject json) {
-        send(json.toString());
-    }
-
-    private void send(String json) {
-        if (connected) {
-            channel.writeAndFlush(json);
-        }
+        this.connect();
     }
 
     //********//
     // Events //
     //********//
+    @Override
+    public void onOpen(ServerHandshake handshakeData) {
+        granite.LOG.info("Handshake with node " + name + " completed (" + handshakeData.getHttpStatus() + " " + handshakeData.getHttpStatusMessage() + ")");
+        send(new EventBuffer(30));
+    }
+
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
     public void onMessage(String message) {
         JSONObject payload = new JSONObject(message);
         String op = payload.getString("op");
         switch (op) {
             case "connection-id":
-                connectionId = payload.getString("id");
+                setResumeId(payload.getString("id"));
                 break;
             default:
                 granite.LOG.warn("Received an invalid OP: " + op);
@@ -104,29 +51,45 @@ public class AndesiteNode {
         }
     }
 
-    public void onNetworkError(Throwable error) {
-        granite.LOG.error("A network error occurred in the node " + name, error);
-        this.disconnect();
-        granite.LOG.warn("Reconnecting in 5 seconds");
-        Utils.setTimeout(this::connect, 5000);
+    @Override
+    public void onClose(int code, String reason, boolean remote) {
+        granite.LOG.warn("Connection with node " + name + " closed (" + code + " " + reason + "; Was remote: " + remote + ")");
+    }
+
+    @Override
+    public void onError(Exception ex) {
+        granite.LOG.error("An exception occurred in node " + name, ex);
     }
 
     //*********//
     // Getters //
     //*********//
-    public String getHost() {
-        return host;
+    String getHost() {
+        return uri.getHost();
     }
 
-    public int getPort() {
-        return port;
+    int getPort() {
+        return uri.getPort();
     }
 
-    public String getUserId() {
-        return userId;
+    String getUserId() {
+        return headers.get("User-Id");
     }
 
-    public String getPassword() {
-        return password;
+    String getPassword() {
+        return headers.get("Authorization");
+    }
+
+    //********************//
+    // Pseudo-constructor //
+    //********************//
+    static AndesiteNode makeNode(Granite granite, String host, int port, String password, String userId, List<Region> regions, String name) throws URISyntaxException {
+        URI uri = new URI("ws://" + host + ":" + port + "/websocket");
+        Map<String, String> headers = new HashMap<>();
+
+        headers.put("Authorization", password);
+        headers.put("User-Id", userId);
+        headers.put("User-Agent", "Granite v" + GraniteVersion.VERSION + " (https://github.com/BricoloDuDimanche/Granite)");
+        return new AndesiteNode(granite, uri, headers, regions, name);
     }
 }

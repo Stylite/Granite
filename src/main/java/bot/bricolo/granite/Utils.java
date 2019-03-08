@@ -12,15 +12,13 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import io.netty.handler.codec.base64.Base64;
+import net.iharder.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
+@SuppressWarnings("WeakerAccess")
 public class Utils {
     private static final AudioPlayerManager PLAYER_MANAGER;
 
@@ -36,14 +34,8 @@ public class Utils {
     }
 
     public static AudioTrack toAudioTrack(String base64) throws AudioTrackEncodingException {
-        // Base64
-        ByteBuf byteBuf = ByteBufUtil.threadLocalDirectBuffer();
-        byteBuf.writeCharSequence(base64, StandardCharsets.UTF_8);
-        byteBuf = Base64.decode(byteBuf);
-
-        // Track
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteBuf.array());
         try {
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.decode(base64));
             return PLAYER_MANAGER.decodeTrack(new MessageInput(byteArrayInputStream)).decodedTrack;
         } catch (IOException e) {
             throw new AudioTrackEncodingException("Unable to decode audio track", e);
@@ -58,15 +50,11 @@ public class Utils {
         } catch (IOException e) {
             throw new AudioTrackEncodingException("Unable to encode audio track", e);
         }
-        byte[] binary = byteArrayInputStream.toByteArray();
 
-        // Base64
-        ByteBuf byteBuf = ByteBufUtil.threadLocalDirectBuffer();
-        byteBuf.writeBytes(binary);
-        byteBuf = Base64.encode(byteBuf);
-        return byteBuf.toString(StandardCharsets.UTF_8);
+        return Base64.encodeBytes(byteArrayInputStream.toByteArray());
     }
 
+    @SuppressWarnings("SameParameterValue")
     static void setTimeout(Runnable runnable, int delay) {
         new Thread(() -> {
             try {

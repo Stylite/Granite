@@ -14,8 +14,9 @@ public class VoiceServerUpdate implements IJsonSerializable {
     @Override
     public JSONObject toJson() {
         return new JSONObject()
+                .put("op", "voice-server-update")
                 .put("sessionId", update.getSessionId())
                 .put("guildId", update.getGuildId())
-                .put("event", update.getJSON());
+                .put("event", update.getJSON().getJSONObject("d"));
     }
 }
