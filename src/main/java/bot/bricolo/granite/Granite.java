@@ -23,7 +23,7 @@ public class Granite {
 
     private final OkHttpClient httpClient;
     private final List<AndesiteNode> nodes = new ArrayList<>();
-    private final Map<Long, AndesitePlayer> players = new HashMap<>();
+    private final Map<String, AndesitePlayer> players = new HashMap<>();
 
     public Granite() {
         httpClient = new OkHttpClient();
@@ -53,27 +53,27 @@ public class Granite {
     //*******************//
     @Nullable
     public AndesitePlayer getPlayer(Guild guild) {
-        return getPlayer(guild.getIdLong());
+        return getPlayer(guild.getId());
     }
 
     @Nullable
-    public AndesitePlayer getPlayer(Long guildId) {
+    public AndesitePlayer getPlayer(String guildId) {
         return players.get(guildId);
     }
 
     public AndesitePlayer getOrCreatePlayer(Guild guild) {
-        return getOrCreatePlayer(guild.getIdLong());
+        return getOrCreatePlayer(guild.getId());
     }
 
-    public AndesitePlayer getOrCreatePlayer(Long guildId) {
+    public AndesitePlayer getOrCreatePlayer(String guildId) {
         return players.computeIfAbsent(guildId, Function -> new AndesitePlayer(this, guildId));
     }
 
     public void removePlayer(Guild guild) {
-        removePlayer(guild.getIdLong());
+        removePlayer(guild.getId());
     }
 
-    public void removePlayer(Long guildId) {
+    public void removePlayer(String guildId) {
         players.remove(guildId);
     }
 

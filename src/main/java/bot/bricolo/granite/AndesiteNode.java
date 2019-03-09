@@ -2,6 +2,7 @@ package bot.bricolo.granite;
 
 import bot.bricolo.granite.entities.AbstractSocket;
 import bot.bricolo.granite.entities.payload.EventBuffer;
+import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
 import net.dv8tion.jda.api.Region;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
@@ -37,13 +38,28 @@ public class AndesiteNode extends AbstractSocket {
         send(new EventBuffer(30));
     }
 
-    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     public void onMessage(String message) {
         JSONObject payload = new JSONObject(message);
         String op = payload.getString("op");
         switch (op) {
             case "connection-id":
                 setResumeId(payload.getString("id"));
+                break;
+            case "player-update":
+                AndesitePlayer player = granite.getPlayer(payload.getString("guildId"));
+                if (player != null) {
+                    // update player state
+                }
+                break;
+            case "event":
+                player = granite.getPlayer(payload.getString("guildId"));
+                if (player != null) {
+                    try {
+                        player.handleEvent(payload);
+                    } catch (AudioTrackEncodingException e) {
+                        granite.LOG.error("Failed to handle event " + payload.getString("type"), e);
+                    }
+                }
                 break;
             default:
                 granite.LOG.warn("Received an invalid OP: " + op);
