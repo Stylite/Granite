@@ -13,7 +13,7 @@ public class VoiceInterceptor implements VoiceDispatchInterceptor {
 
     @Override
     public void onVoiceServerUpdate(@Nonnull VoiceServerUpdate update) {
-        AndesitePlayer player = granite.getPlayer(update.getGuildIdLong());
+        AndesitePlayer player = granite.getPlayer(update.getGuildId());
         if (player != null) {
             player.onVoiceServerUpdate(update);
         }
