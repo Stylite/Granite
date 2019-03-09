@@ -2,7 +2,9 @@ package bot.bricolo.granite;
 
 import bot.bricolo.granite.entities.events.*;
 import bot.bricolo.granite.entities.Track;
+import bot.bricolo.granite.entities.payload.Pause;
 import bot.bricolo.granite.entities.payload.Play;
+import bot.bricolo.granite.entities.payload.Stop;
 import bot.bricolo.granite.entities.payload.VoiceServerUpdate;
 import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
 import bot.bricolo.granite.exceptions.NoNodeAvailableException;
@@ -46,6 +48,22 @@ public class AndesitePlayer {
         }
 
         node.send(new Play(guildId, track, true));
+    }
+
+    public void pause(Boolean pause) throws NoNodeAvailableException {
+        if (node == null || !node.isOpen()) {
+            throw new NoNodeAvailableException();
+        }
+
+        node.send(new Pause(pause));
+    }
+
+    public void stop() throws NoNodeAvailableException {
+        if (node == null || !node.isOpen()) {
+            throw new NoNodeAvailableException();
+        }
+
+        node.send(new Stop());
     }
 
     //****************//
