@@ -1,5 +1,5 @@
 # Granite
-[![JitPack](https://jitpack.io/v/BricoloDuDimanche/Granite.svg)](https://jitpack.io/#BricoloDuDimanche/Granite)
+[![JitPack](https://jitpack.io/v/BricoloDuDimanche/Granite.svg?style=flat-square)](https://jitpack.io/#BricoloDuDimanche/Granite)
 [![Discord](https://img.shields.io/badge/chat-on%20Discord%20(%23granite)-7289DA.svg?style=flat-square)](https://discord.gg/2CkzJzM)
 [![License](https://img.shields.io/github/license/BricoloDuDimanche/Granite.svg?style=flat-square)](https://github.com/BricoloDuDimanche/Granite/blob/master/LICENSE)
 [![Donate](https://img.shields.io/badge/donate-Patreon-F96854.svg?style=flat-square)](https://www.patreon.com/Bowser65)
