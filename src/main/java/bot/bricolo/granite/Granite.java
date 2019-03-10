@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -80,6 +81,26 @@ public class Granite {
     //*******//
     // Utils //
     //*******//
+    public CompletableFuture<Track> getTrack(String search) {
+        CompletableFuture<Track> completableFuture = new CompletableFuture<>();
+        String identifier = search;
+        try {
+            new URI(search);
+        } catch (URISyntaxException e) {
+            identifier = "ytsearch:" + search;
+        }
+
+        search(identifier).thenAccept(trackList -> {
+            if (trackList.size() == 0) return;
+            try {
+                completableFuture.complete(trackList.get(0));
+            } catch(IndexOutOfBoundsException e1) {
+                completableFuture.complete(null);
+            }
+        });
+        return completableFuture;
+    }
+
     public CompletableFuture<List<Track>> search(String search) {
         CompletableFuture<List<Track>> completableFuture = new CompletableFuture<>();
 

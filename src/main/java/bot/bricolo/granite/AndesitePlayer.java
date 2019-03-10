@@ -55,7 +55,7 @@ public class AndesitePlayer {
             throw new NoNodeAvailableException();
         }
 
-        node.send(new Pause(pause));
+        node.send(new Pause(guildId, pause));
     }
 
     public void stop() throws NoNodeAvailableException {
@@ -63,7 +63,7 @@ public class AndesitePlayer {
             throw new NoNodeAvailableException();
         }
 
-        node.send(new Stop());
+        node.send(new Stop(guildId));
     }
 
     //****************//
@@ -110,7 +110,9 @@ public class AndesitePlayer {
     // Voice handling //
     //****************//
     void onVoiceServerUpdate(@Nonnull VoiceDispatchInterceptor.VoiceServerUpdate update) {
-        node.send(new VoiceServerUpdate(update));
+        if (node != null && node.isOpen()) {
+            node.send(new VoiceServerUpdate(update));
+        }
     }
 
     //***********//
