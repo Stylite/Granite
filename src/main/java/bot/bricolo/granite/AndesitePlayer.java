@@ -77,6 +77,11 @@ public class AndesitePlayer {
         PlayerEvent event = null;
 
         switch (payload.getString("type")) {
+            case "TrackStartEvent":
+                event = new TrackStartEvent(this,
+                        Utils.toAudioTrack(payload.getString("track"))
+                );
+                break;
             case "TrackEndEvent":
                 event = new TrackEndEvent(this,
                         Utils.toAudioTrack(payload.getString("track")),
@@ -96,6 +101,7 @@ public class AndesitePlayer {
                 );
                 break;
             case "WebSocketClosedEvent":
+                // ok
                 break;
             default:
                 granite.LOG.warn("Unexpected event type: " + payload.getString("type"));

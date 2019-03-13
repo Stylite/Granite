@@ -3,7 +3,6 @@ package bot.bricolo.example;
 import bot.bricolo.granite.AndesitePlayer;
 import bot.bricolo.granite.Granite;
 import bot.bricolo.granite.VoiceInterceptor;
-import bot.bricolo.granite.entities.Track;
 import bot.bricolo.granite.exceptions.NoNodeAvailableException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
