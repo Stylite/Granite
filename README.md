@@ -4,7 +4,8 @@
 [![License](https://img.shields.io/github/license/BricoloDuDimanche/Granite.svg?style=flat-square)](https://github.com/BricoloDuDimanche/Granite/blob/master/LICENSE)
 [![Donate](https://img.shields.io/badge/donate-Patreon-F96854.svg?style=flat-square)](https://www.patreon.com/Bowser65)
 
-A powerful, intuitive and easy to use client for [Andesite](https://github.com/natanbc/andesite-node) & JDA 4
+A powerful, intuitive and easy to use client for [Andesite](https://github.com/natanbc/andesite-node) compatible with
+[JDA 4](https://github.com/DV8FromTheWorld/JDA) and [Catnip](https://github.com/mewna/catnip)
 
 ## Installation
 

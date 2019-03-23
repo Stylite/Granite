@@ -1,31 +1,31 @@
 package bot.bricolo.example;
 
 import bot.bricolo.granite.AndesitePlayer;
+import bot.bricolo.granite.CatnipVoiceInterceptor;
 import bot.bricolo.granite.Granite;
-import bot.bricolo.granite.VoiceInterceptor;
 import bot.bricolo.granite.exceptions.NoNodeAvailableException;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import com.mewna.catnip.Catnip;
+import com.mewna.catnip.CatnipOptions;
+import com.mewna.catnip.entity.channel.VoiceChannel;
+import com.mewna.catnip.entity.guild.Guild;
+import com.mewna.catnip.entity.message.Message;
+import com.mewna.catnip.entity.user.User;
+import com.mewna.catnip.entity.user.VoiceState;
+import com.mewna.catnip.shard.DiscordEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 // Please note that reusing this code implies that you comply with the GNU Affero General Public License v3.0
 // the project is licensed under. Not complying with it is illegal and may result in a DMCA takedown.
 // This code is made for educational purposes only and should not be used in a production bot.
-public class Bot extends ListenerAdapter {
+public class CatnipBot {
     private static final Granite granite = new Granite();
 
-    private static final String USER_ID = "...";
-    private static final String TOKEN = "...";
-
-    private static JDA jda;
+    private static final String USER_ID = System.getenv("USER_ID");
+    private static final String TOKEN = System.getenv("BOT_TOKEN");
 
     public static void main(final String[] args) throws Exception {
         // ==> 1st step: Add a node
@@ -37,39 +37,37 @@ public class Bot extends ListenerAdapter {
         // You can add as much nodes as you want, and Granite will handle load balancing for you.
         granite.addNode("127.0.0.1", 5000, "you-shall-not-pass", USER_ID);
 
-        // ==> 2nd step: Initialize JDA
-        // As your classic bot, you can initialize JDA with you classic initialization script, but you'll need to
-        // add something to it. In order to allow Granite to capture and inform Andesite that the voice state have
-        // changed (when you joined a voice channel for example) JDA implemented in version 4 a "VoiceInterceptor".
-        // This allows to easily capture events, and is specified while constructing your JDA instance. Just use
-        // ".setVoiceDispatchInterceptor(new VoiceInterceptor(granite))" and you're ready to go.
-        jda = new JDABuilder()
-                .setToken(TOKEN)
-                .addEventListeners(new Bot())
-                // Here is the line you'll have to add
-                .setVoiceDispatchInterceptor(new VoiceInterceptor(granite))
-                .build();
+        // ==> 2nd step: Configure and initialize Catnip
+        CatnipOptions opts = new CatnipOptions(TOKEN);
+        Catnip catnip = Catnip.catnip(opts).connect();
+        catnip.on(DiscordEvent.MESSAGE_CREATE, CatnipBot::handleMessage);
+
+        // You need to add these 3 lines to forward events and make Granite work.
+        CatnipVoiceInterceptor voiceInterceptor = new CatnipVoiceInterceptor(granite);
+        catnip.on(DiscordEvent.VOICE_SERVER_UPDATE, voiceInterceptor::onVoiceServerUpdate);
+        catnip.on(DiscordEvent.VOICE_STATE_UPDATE, voiceInterceptor::onVoiceStateUpdate);
     }
 
     // Let's create a basic music bot using Granite. We'll only provide play, pause, seek, volume and stop in this
     // example, and we'll not use a proper command handler. This is something you should do if you're creating a bot.
-    @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
+    private static void handleMessage(Message message) {
         // First, we prevent loops by ignoring the event if the message have been sent by another bot.
-        if (event.getAuthor().isBot()) return;
+        if (message.author().bot()) return;
 
         // Then we only respond to command issued in guilds, as DMs have no voice channels
-        if (event.getChannel().getType() != ChannelType.TEXT) return;
+        if (!message.channel().isGuild()) return;
+        Guild guild = message.guild();
+        assert guild != null;
 
         // We'll get a player for the guild, or create one if it does not exist.
-        AndesitePlayer player = granite.getOrCreatePlayer(event.getGuild());
+        AndesitePlayer player = granite.getOrCreatePlayer(guild);
 
         // Let's parse the command
-        String[] message = event.getMessage().getContentStripped().split(" ");
+        String[] args = message.content().split(" ");
         try {
-            switch (message[0]) {
+            switch (args[0]) {
                 case "%play":
-                    handlePlay(event, message, player);
+                    handlePlay(message, args, player);
                     break;
                 case "%pause":
                     player.pause(true);
@@ -82,40 +80,44 @@ public class Bot extends ListenerAdapter {
                 case "%volume":
                     break;
                 case "%stop":
-                    event.getGuild().getAudioManager().closeAudioConnection();
+                    guild.closeVoiceConnection();
                     player.stop();
                     break;
             }
         } catch (NoNodeAvailableException e) {
             // This should not happen often, but may occur. Player will always try to find an available node, and
             // will get one assigned as soon as one is ready to handle players.
-            event.getChannel().sendMessage("No music node is available right now!").queue();
+            message.channel().sendMessage("No music node is available right now!");
         }
     }
 
     // Here is the handling of the play command. I separated it because it's the biggest block of the command handler.
-    private void handlePlay(MessageReceivedEvent event, String[] args, AndesitePlayer player) {
+    private static void handlePlay(Message message, String[] args, AndesitePlayer player) {
+        // null memes
+        Guild guild = message.guild();
+        assert guild != null;
+        User self = message.catnip().selfUser();
+        assert self != null;
+
         // ==> Step 1: Check if the user is in a voice channel, and if the bot can connect to it.
-        if (!event.getMember().getVoiceState().inVoiceChannel()) {
-            event.getChannel().sendMessage("You're not in a voice channel").queue();
+        VoiceState voiceState = message.catnip().cache().voiceState(guild.id(), message.author().id());
+        if (voiceState == null || voiceState.channel() == null) {
+            message.channel().sendMessage("You're not in a voice channel");
             return;
         }
 
-        VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel();
-        if (event.getGuild().getSelfMember().getVoiceState().inVoiceChannel()) {
+        VoiceState selfVoiceState = message.catnip().cache().voiceState(guild.id(), self.id());
+        VoiceChannel voiceChannel = voiceState.channel();
+        if (selfVoiceState != null && selfVoiceState.channel() != null) {
             // We're already in a voice channel, so we just check if the command issuer is in the same channel.
-            if (!event.getGuild().getSelfMember().getVoiceState().getChannel().getId().equals(voiceChannel.getId())) {
-                event.getChannel().sendMessage("You're not in the same voice channel").queue();
+            if (!Objects.equals(selfVoiceState.channelId(), voiceState.channelId())) {
+                message.channel().sendMessage("You're not in the same voice channel");
                 return;
             }
         } else {
-            // We're connecting to a voice channel and checking if we can do so.
-            if (!event.getGuild().getSelfMember().hasPermission(voiceChannel, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK)) {
-                event.getChannel().sendMessage("I don't have enough permissions").queue();
-                return;
-            }
-
-            event.getGuild().getAudioManager().openAudioConnection(voiceChannel);
+            // We're connecting to a voice channel
+            assert voiceChannel != null;
+            voiceChannel.openVoiceConnection();
         }
 
         // ==> Step 2: Fetch the audio track.
@@ -124,11 +126,11 @@ public class Bot extends ListenerAdapter {
 
         granite.getTrack(String.join(" ", search)).thenAccept(track -> {
             // ==> Step 3: Play the track.
-            event.getChannel().sendMessage("Found track `" + track.getTitle() + "` by `" + track.getAuthor() + "`").queue();
+            message.channel().sendMessage("Found track `" + track.getTitle() + "` by `" + track.getAuthor() + "`");
             try {
                 player.play(track);
             } catch (NoNodeAvailableException e) {
-                event.getChannel().sendMessage("No music node is available right now!").queue();
+                message.channel().sendMessage("No music node is available right now!");
             }
         });
     }

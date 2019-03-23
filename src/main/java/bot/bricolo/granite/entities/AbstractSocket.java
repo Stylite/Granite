@@ -41,6 +41,7 @@ public abstract class AbstractSocket {
     }
 
     private void send(String text) {
+        System.out.println("~> " + text);
         if (socket != null && socket.isOpen()) {
             granite.LOG.debug("~> " + text);
             socket.send(text);
@@ -116,12 +117,14 @@ public abstract class AbstractSocket {
 
         @Override
         public void onMessage(String message) {
+            System.out.println("<~ " + message);
             granite.LOG.debug("<~ " + message);
             instance.onMessage(message);
         }
 
         @Override
         public void onClose(int code, String reason, boolean remote) {
+            System.out.println("big fat rip " + code + " " + reason + " " + remote);
             instance.onClose(code, reason, remote);
         }
 

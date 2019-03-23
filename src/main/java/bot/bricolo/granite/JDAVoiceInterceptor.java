@@ -4,10 +4,10 @@ import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 
 import javax.annotation.Nonnull;
 
-public class VoiceInterceptor implements VoiceDispatchInterceptor {
+public class JDAVoiceInterceptor implements VoiceDispatchInterceptor {
     private final Granite granite;
 
-    public VoiceInterceptor(Granite granite) {
+    public JDAVoiceInterceptor(Granite granite) {
         this.granite = granite;
     }
 

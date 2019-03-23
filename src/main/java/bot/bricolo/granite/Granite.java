@@ -1,7 +1,7 @@
 package bot.bricolo.granite;
 
+import bot.bricolo.granite.entities.Region;
 import bot.bricolo.granite.entities.Track;
-import net.dv8tion.jda.api.Region;
 import net.dv8tion.jda.api.entities.Guild;
 import okhttp3.*;
 import org.json.JSONArray;
@@ -58,6 +58,11 @@ public class Granite {
     }
 
     @Nullable
+    public AndesitePlayer getPlayer(com.mewna.catnip.entity.guild.Guild guild) {
+        return getPlayer(guild.id());
+    }
+
+    @Nullable
     public AndesitePlayer getPlayer(String guildId) {
         return players.get(guildId);
     }
@@ -66,12 +71,20 @@ public class Granite {
         return getOrCreatePlayer(guild.getId());
     }
 
+    public AndesitePlayer getOrCreatePlayer(com.mewna.catnip.entity.guild.Guild guild) {
+        return getOrCreatePlayer(guild.id());
+    }
+
     public AndesitePlayer getOrCreatePlayer(String guildId) {
         return players.computeIfAbsent(guildId, Function -> new AndesitePlayer(this, guildId));
     }
 
     public void removePlayer(Guild guild) {
         removePlayer(guild.getId());
+    }
+
+    public void removePlayer(com.mewna.catnip.entity.guild.Guild guild) {
+        removePlayer(guild.id());
     }
 
     public void removePlayer(String guildId) {
@@ -94,7 +107,7 @@ public class Granite {
             if (trackList.size() == 0) return;
             try {
                 completableFuture.complete(trackList.get(0));
-            } catch(IndexOutOfBoundsException e1) {
+            } catch (IndexOutOfBoundsException e1) {
                 completableFuture.complete(null);
             }
         });

@@ -2,10 +2,7 @@ package bot.bricolo.granite;
 
 import bot.bricolo.granite.entities.events.*;
 import bot.bricolo.granite.entities.Track;
-import bot.bricolo.granite.entities.payload.Pause;
-import bot.bricolo.granite.entities.payload.Play;
-import bot.bricolo.granite.entities.payload.Stop;
-import bot.bricolo.granite.entities.payload.VoiceServerUpdate;
+import bot.bricolo.granite.entities.payload.*;
 import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
 import bot.bricolo.granite.exceptions.NoNodeAvailableException;
 import bot.bricolo.granite.exceptions.RemoteTrackException;
@@ -56,6 +53,23 @@ public class AndesitePlayer {
         }
 
         node.send(new Pause(guildId, pause));
+    }
+
+    public void volume(int volume) throws NoNodeAvailableException {
+        if (node == null || !node.isOpen()) {
+            throw new NoNodeAvailableException();
+        }
+
+        node.send(new Volume(guildId, volume));
+    }
+
+    public void seek(int seek) throws NoNodeAvailableException {
+        if (node == null || !node.isOpen()) {
+            throw new NoNodeAvailableException();
+        }
+
+        // @todo: Checks for music duration overflow
+        node.send(new Seek(guildId, seek));
     }
 
     public void stop() throws NoNodeAvailableException {
@@ -116,6 +130,12 @@ public class AndesitePlayer {
     // Voice handling //
     //****************//
     void onVoiceServerUpdate(@Nonnull VoiceDispatchInterceptor.VoiceServerUpdate update) {
+        if (node != null && node.isOpen()) {
+            node.send(new VoiceServerUpdate(update));
+        }
+    }
+
+    void onVoiceServerUpdate(@Nonnull com.mewna.catnip.entity.voice.VoiceServerUpdate update) {
         if (node != null && node.isOpen()) {
             node.send(new VoiceServerUpdate(update));
         }

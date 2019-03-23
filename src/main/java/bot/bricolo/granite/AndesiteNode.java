@@ -1,9 +1,9 @@
 package bot.bricolo.granite;
 
 import bot.bricolo.granite.entities.AbstractSocket;
+import bot.bricolo.granite.entities.Region;
 import bot.bricolo.granite.entities.payload.EventBuffer;
 import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
-import net.dv8tion.jda.api.Region;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
@@ -35,7 +35,7 @@ public class AndesiteNode extends AbstractSocket {
     @Override
     public void onOpen(ServerHandshake handshakeData) {
         granite.LOG.info("Handshake with node " + name + " completed (" + handshakeData.getHttpStatus() + " " + handshakeData.getHttpStatusMessage() + ")");
-        send(new EventBuffer(30));
+        // send(new EventBuffer(30));
     }
 
     public void onMessage(String message) {

@@ -7,13 +7,15 @@ group 'bot.bricolo.granite'
 version versionObj.toString()
 
 repositories {
-    mavenCentral()
     jcenter()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     api 'org.slf4j:slf4j-api:1.7.25'
     implementation 'net.dv8tion:JDA:4.ALPHA.0_58'
+    implementation 'com.github.mewna:catnip:1.0.1'
     implementation 'com.sedmelluq:lavaplayer:1.3.11'
     implementation 'com.squareup.okhttp3:okhttp:3.13.1'
     implementation 'org.java-websocket:Java-WebSocket:1.4.0'
