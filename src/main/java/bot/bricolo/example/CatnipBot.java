@@ -76,8 +76,10 @@ public class CatnipBot {
                     player.pause(false);
                     break;
                 case "%seek":
+                    player.seek(player.state.getPosition() + Integer.valueOf(args[1]) * 1000);
                     break;
                 case "%volume":
+                    player.volume(Math.min(100, Math.max(0, Integer.valueOf(args[1]))));
                     break;
                 case "%stop":
                     guild.closeVoiceConnection();

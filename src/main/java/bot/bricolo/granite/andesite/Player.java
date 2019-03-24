@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Player {
     private final Granite granite;
     private final String guildId;
-    private final State state;
+    public final State state;
     private Node node;
     private List<IEventListener> listeners = new ArrayList<>();
 
@@ -74,6 +74,14 @@ public class Player {
 
         // @todo: Checks for music duration overflow
         node.send(new Seek(guildId, seek));
+    }
+
+    public void updateFilters(Filter payload) throws NoNodeAvailableException {
+        if (node == null || !node.isOpen()) {
+            throw new NoNodeAvailableException();
+        }
+
+        node.send(payload);
     }
 
     public void stop() throws NoNodeAvailableException {
