@@ -100,11 +100,12 @@ public class Player {
 
         switch (payload.getString("type")) {
             case "TrackStartEvent":
-                event = new TrackStartEvent(this,
-                        Utils.toAudioTrack(payload.getString("track"))
-                );
+                AudioTrack track = Utils.toAudioTrack(payload.getString("track"));
+                event = new TrackStartEvent(this, track);
+                state.setTrack(track);
                 break;
             case "TrackEndEvent":
+                state.setTrack(null);
                 event = new TrackEndEvent(this,
                         Utils.toAudioTrack(payload.getString("track")),
                         AudioTrackEndReason.valueOf(payload.getString("reason"))

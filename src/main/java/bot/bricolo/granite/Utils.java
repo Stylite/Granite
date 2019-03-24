@@ -53,7 +53,6 @@ public class Utils {
         return Base64.encodeBytes(byteArrayInputStream.toByteArray());
     }
 
-    @SuppressWarnings("SameParameterValue")
     public static void setTimeout(Runnable runnable, int delay) {
         new Thread(() -> {
             try {

@@ -3,6 +3,7 @@ package bot.bricolo.granite.andesite;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,14 +33,14 @@ public class State {
     private boolean karaokeEnabled;
 
     private int tremoloFrequency;
-    private double tremoloDepth;
+    private float tremoloDepth;
     private boolean tremoloEnabled;
 
     private int vibratoFrequency;
-    private double vibratoDepth;
+    private float vibratoDepth;
     private boolean vibratoEnabled;
 
-    private List<Double> equalizerBands;
+    private List<Float> equalizerBands;
     private boolean equalizerEnabled;
 
     // Mixer
@@ -84,22 +85,6 @@ public class State {
         return timescaleRate;
     }
 
-    public boolean isEqualizerEnabled() {
-        return equalizerEnabled;
-    }
-
-    public List<Double> getEqualizerBands() {
-        return equalizerBands;
-    }
-
-    public boolean isVibratoEnabled() {
-        return vibratoEnabled;
-    }
-
-    public double getVibratoDepth() {
-        return vibratoDepth;
-    }
-
     public boolean isTimescaleEnabled() {
         return timescaleEnabled;
     }
@@ -136,7 +121,7 @@ public class State {
         return tremoloFrequency;
     }
 
-    public double getTremoloDepth() {
+    public float getTremoloDepth() {
         return tremoloDepth;
     }
 
@@ -146,6 +131,22 @@ public class State {
 
     public int getVibratoFrequency() {
         return vibratoFrequency;
+    }
+
+    public float getVibratoDepth() {
+        return vibratoDepth;
+    }
+
+    public boolean isVibratoEnabled() {
+        return vibratoEnabled;
+    }
+
+    public List<Float> getEqualizerBands() {
+        return equalizerBands;
+    }
+
+    public boolean isEqualizerEnabled() {
+        return equalizerEnabled;
     }
 
     public int getPacketLoss() {
@@ -190,15 +191,15 @@ public class State {
         karaokeEnabled = karaoke.getBoolean("enabled");
 
         tremoloFrequency = tremolo.getInt("frequency");
-        tremoloDepth = tremolo.getDouble("depth");
+        tremoloDepth = tremolo.getBigDecimal("depth").floatValue();
         tremoloEnabled = tremolo.getBoolean("enabled");
 
         vibratoFrequency = vibrato.getInt("frequency");
-        vibratoDepth = vibrato.getDouble("depth");
+        vibratoDepth = vibrato.getBigDecimal("depth").floatValue();
         vibratoEnabled = vibrato.getBoolean("enabled");
 
-        List<Double> bands = new ArrayList<>();
-        equalizer.getJSONArray("bands").forEach(band -> bands.add((Double) band));
+        List<Float> bands = new ArrayList<>();
+        equalizer.getJSONArray("bands").forEach(band -> bands.add(new BigDecimal(band.toString()).floatValue()));
         equalizerBands = bands;
         equalizerEnabled = equalizer.getBoolean("enabled");
 
