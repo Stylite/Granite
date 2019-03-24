@@ -1,8 +1,9 @@
-package bot.bricolo.granite;
+package bot.bricolo.granite.andesite;
 
+import bot.bricolo.granite.Granite;
+import bot.bricolo.granite.GraniteVersion;
 import bot.bricolo.granite.entities.AbstractSocket;
 import bot.bricolo.granite.entities.Region;
-import bot.bricolo.granite.entities.payload.EventBuffer;
 import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
@@ -14,13 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AndesiteNode extends AbstractSocket {
+public class Node extends AbstractSocket {
     private final URI uri;
     private final Map<String, String> headers;
     private final List<Region> regions;
     private final String name;
 
-    private AndesiteNode(Granite granite, URI uri, Map<String, String> headers, List<Region> regions, String name) {
+    private Node(Granite granite, URI uri, Map<String, String> headers, List<Region> regions, String name) {
         super(granite, uri, new Draft_6455(), headers, 10);
         this.uri = uri;
         this.headers = headers;
@@ -46,10 +47,8 @@ public class AndesiteNode extends AbstractSocket {
                 setResumeId(payload.getString("id"));
                 break;
             case "player-update":
-                AndesitePlayer player = granite.getPlayer(payload.getString("guildId"));
-                if (player != null) {
-                    // update player state
-                }
+                Player player = granite.getPlayer(payload.getString("guildId"));
+                if (player != null) player.playerUpdate(payload);
                 break;
             case "event":
                 player = granite.getPlayer(payload.getString("guildId"));
@@ -80,32 +79,32 @@ public class AndesiteNode extends AbstractSocket {
     //*********//
     // Getters //
     //*********//
-    String getHost() {
+    public String getHost() {
         return uri.getHost();
     }
 
-    int getPort() {
+    public int getPort() {
         return uri.getPort();
     }
 
-    String getUserId() {
+    public String getUserId() {
         return headers.get("User-Id");
     }
 
-    String getPassword() {
+    public String getPassword() {
         return headers.get("Authorization");
     }
 
     //********************//
     // Pseudo-constructor //
     //********************//
-    static AndesiteNode makeNode(Granite granite, String host, int port, String password, String userId, List<Region> regions, String name) throws URISyntaxException {
+    public static Node makeNode(Granite granite, String host, int port, String password, String userId, List<Region> regions, String name) throws URISyntaxException {
         URI uri = new URI("ws://" + host + ":" + port + "/websocket");
         Map<String, String> headers = new HashMap<>();
 
         headers.put("Authorization", password);
         headers.put("User-Id", userId);
         headers.put("User-Agent", "Granite v" + GraniteVersion.VERSION + " (https://github.com/BricoloDuDimanche/Granite)");
-        return new AndesiteNode(granite, uri, headers, regions, name);
+        return new Node(granite, uri, headers, regions, name);
     }
 }

@@ -1,6 +1,6 @@
 package bot.bricolo.example;
 
-import bot.bricolo.granite.AndesitePlayer;
+import bot.bricolo.granite.andesite.Player;
 import bot.bricolo.granite.CatnipVoiceInterceptor;
 import bot.bricolo.granite.Granite;
 import bot.bricolo.granite.exceptions.NoNodeAvailableException;
@@ -60,7 +60,7 @@ public class CatnipBot {
         assert guild != null;
 
         // We'll get a player for the guild, or create one if it does not exist.
-        AndesitePlayer player = granite.getOrCreatePlayer(guild);
+        Player player = granite.getOrCreatePlayer(guild);
 
         // Let's parse the command
         String[] args = message.content().split(" ");
@@ -92,7 +92,7 @@ public class CatnipBot {
     }
 
     // Here is the handling of the play command. I separated it because it's the biggest block of the command handler.
-    private static void handlePlay(Message message, String[] args, AndesitePlayer player) {
+    private static void handlePlay(Message message, String[] args, Player player) {
         // null memes
         Guild guild = message.guild();
         assert guild != null;

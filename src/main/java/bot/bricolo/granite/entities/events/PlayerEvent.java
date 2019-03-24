@@ -1,15 +1,15 @@
 package bot.bricolo.granite.entities.events;
 
-import bot.bricolo.granite.AndesitePlayer;
+import bot.bricolo.granite.andesite.Player;
 
 public abstract class PlayerEvent {
-    private final AndesitePlayer player;
+    private final Player player;
 
-    public PlayerEvent(AndesitePlayer player) {
+    public PlayerEvent(Player player) {
         this.player = player;
     }
 
-    public AndesitePlayer getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 }

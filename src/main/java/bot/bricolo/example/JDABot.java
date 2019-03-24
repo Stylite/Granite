@@ -1,6 +1,6 @@
 package bot.bricolo.example;
 
-import bot.bricolo.granite.AndesitePlayer;
+import bot.bricolo.granite.andesite.Player;
 import bot.bricolo.granite.Granite;
 import bot.bricolo.granite.JDAVoiceInterceptor;
 import bot.bricolo.granite.exceptions.NoNodeAvailableException;
@@ -55,7 +55,7 @@ public class JDABot extends ListenerAdapter {
         if (event.getChannel().getType() != ChannelType.TEXT) return;
 
         // We'll get a player for the guild, or create one if it does not exist.
-        AndesitePlayer player = granite.getOrCreatePlayer(event.getGuild());
+        Player player = granite.getOrCreatePlayer(event.getGuild());
 
         // Let's parse the command
         String[] message = event.getMessage().getContentStripped().split(" ");
@@ -87,7 +87,7 @@ public class JDABot extends ListenerAdapter {
     }
 
     // Here is the handling of the play command. I separated it because it's the biggest block of the command handler.
-    private void handlePlay(MessageReceivedEvent event, String[] args, AndesitePlayer player) {
+    private void handlePlay(MessageReceivedEvent event, String[] args, Player player) {
         // ==> Step 1: Check if the user is in a voice channel, and if the bot can connect to it.
         if (!event.getMember().getVoiceState().inVoiceChannel()) {
             event.getChannel().sendMessage("You're not in a voice channel").queue();

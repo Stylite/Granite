@@ -1,9 +1,9 @@
 package bot.bricolo.granite.entities.events;
 
-import bot.bricolo.granite.AndesitePlayer;
+import bot.bricolo.granite.andesite.Player;
 
 public class PlayerResumeEvent extends PlayerEvent {
-    public PlayerResumeEvent(AndesitePlayer player) {
+    public PlayerResumeEvent(Player player) {
         super(player);
     }
 }

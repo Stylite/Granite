@@ -1,5 +1,7 @@
-package bot.bricolo.granite;
+package bot.bricolo.granite.andesite;
 
+import bot.bricolo.granite.Granite;
+import bot.bricolo.granite.Utils;
 import bot.bricolo.granite.entities.events.*;
 import bot.bricolo.granite.entities.Track;
 import bot.bricolo.granite.entities.payload.*;
@@ -16,15 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class AndesitePlayer {
+public class Player {
     private final Granite granite;
     private final String guildId;
-    private AndesiteNode node;
+    private final State state;
+    private Node node;
     private List<IEventListener> listeners = new ArrayList<>();
 
-    AndesitePlayer(Granite granite, String guildId) {
+    public Player(Granite granite, String guildId) {
         this.granite = granite;
         this.guildId = guildId;
+        this.state = new State(guildId);
         this.assignNode();
     }
 
@@ -87,6 +91,10 @@ public class AndesitePlayer {
         listeners.add(listener);
     }
 
+    void playerUpdate(JSONObject payload) {
+        state.decodePayload(payload.getJSONObject("state"));
+    }
+
     void handleEvent(JSONObject payload) throws AudioTrackEncodingException {
         PlayerEvent event = null;
 
@@ -129,13 +137,13 @@ public class AndesitePlayer {
     //****************//
     // Voice handling //
     //****************//
-    void onVoiceServerUpdate(@Nonnull VoiceDispatchInterceptor.VoiceServerUpdate update) {
+    public void onVoiceServerUpdate(@Nonnull VoiceDispatchInterceptor.VoiceServerUpdate update) {
         if (node != null && node.isOpen()) {
             node.send(new VoiceServerUpdate(update));
         }
     }
 
-    void onVoiceServerUpdate(@Nonnull com.mewna.catnip.entity.voice.VoiceServerUpdate update) {
+    public void onVoiceServerUpdate(@Nonnull com.mewna.catnip.entity.voice.VoiceServerUpdate update) {
         if (node != null && node.isOpen()) {
             node.send(new VoiceServerUpdate(update));
         }
@@ -145,7 +153,7 @@ public class AndesitePlayer {
     // Internals //
     //***********//
     private void assignNode() {
-        List<AndesiteNode> nodes = granite.getAvailableNodes();
+        List<Node> nodes = granite.getAvailableNodes();
         if (nodes.size() == 0) {
             granite.LOG.warn("No Andesite node available right now (Guild " + guildId + "). Trying to assign a node again in 5 seconds");
             Utils.setTimeout(this::assignNode, 5000);

@@ -1,5 +1,7 @@
 package bot.bricolo.granite;
 
+import bot.bricolo.granite.andesite.Node;
+import bot.bricolo.granite.andesite.Player;
 import bot.bricolo.granite.entities.Region;
 import bot.bricolo.granite.entities.Track;
 import net.dv8tion.jda.api.entities.Guild;
@@ -23,8 +25,8 @@ public class Granite {
     public final Logger LOG = LoggerFactory.getLogger(Granite.class);
 
     private final OkHttpClient httpClient;
-    private final List<AndesiteNode> nodes = new ArrayList<>();
-    private final Map<String, AndesitePlayer> players = new HashMap<>();
+    private final List<Node> nodes = new ArrayList<>();
+    private final Map<String, Player> players = new HashMap<>();
 
     public Granite() {
         httpClient = new OkHttpClient();
@@ -46,37 +48,37 @@ public class Granite {
     }
 
     public void addNode(String host, int port, String password, String userId, List<Region> regions, String name) throws URISyntaxException {
-        nodes.add(AndesiteNode.makeNode(this, host, port, password, userId, regions, name));
+        nodes.add(Node.makeNode(this, host, port, password, userId, regions, name));
     }
 
     //*******************//
     // Player management //
     //*******************//
     @Nullable
-    public AndesitePlayer getPlayer(Guild guild) {
+    public Player getPlayer(Guild guild) {
         return getPlayer(guild.getId());
     }
 
     @Nullable
-    public AndesitePlayer getPlayer(com.mewna.catnip.entity.guild.Guild guild) {
+    public Player getPlayer(com.mewna.catnip.entity.guild.Guild guild) {
         return getPlayer(guild.id());
     }
 
     @Nullable
-    public AndesitePlayer getPlayer(String guildId) {
+    public Player getPlayer(String guildId) {
         return players.get(guildId);
     }
 
-    public AndesitePlayer getOrCreatePlayer(Guild guild) {
+    public Player getOrCreatePlayer(Guild guild) {
         return getOrCreatePlayer(guild.getId());
     }
 
-    public AndesitePlayer getOrCreatePlayer(com.mewna.catnip.entity.guild.Guild guild) {
+    public Player getOrCreatePlayer(com.mewna.catnip.entity.guild.Guild guild) {
         return getOrCreatePlayer(guild.id());
     }
 
-    public AndesitePlayer getOrCreatePlayer(String guildId) {
-        return players.computeIfAbsent(guildId, Function -> new AndesitePlayer(this, guildId));
+    public Player getOrCreatePlayer(String guildId) {
+        return players.computeIfAbsent(guildId, Function -> new Player(this, guildId));
     }
 
     public void removePlayer(Guild guild) {
@@ -118,7 +120,7 @@ public class Granite {
         CompletableFuture<List<Track>> completableFuture = new CompletableFuture<>();
 
         int index = ThreadLocalRandom.current().nextInt(nodes.size());
-        AndesiteNode node = nodes.get(index);
+        Node node = nodes.get(index);
 
         HttpUrl url = new HttpUrl.Builder()
                 .scheme("http")
@@ -161,8 +163,8 @@ public class Granite {
     //****************//
     // Internal Utils //
     //****************//
-    List<AndesiteNode> getAvailableNodes() {
-        List<AndesiteNode> availableNodes = new ArrayList<>();
+    public List<Node> getAvailableNodes() {
+        List<Node> availableNodes = new ArrayList<>();
         nodes.forEach((node) -> {
             if (node.isOpen()) {
                 availableNodes.add(node);

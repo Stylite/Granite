@@ -1,32 +1,32 @@
 package bot.bricolo.granite.entities.events;
 
-import bot.bricolo.granite.AndesitePlayer;
+import bot.bricolo.granite.andesite.Player;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class EventAdapter implements IEventListener {
-    public void onPlayerPause(AndesitePlayer player) {
+    public void onPlayerPause(Player player) {
         // memes
     }
 
-    public void onPlayerResume(AndesitePlayer player) {
+    public void onPlayerResume(Player player) {
         // memes
     }
 
-    public void onTrackStart(AndesitePlayer player, AudioTrack track) {
+    public void onTrackStart(Player player, AudioTrack track) {
         // memes
     }
 
-    public void onTrackEnd(AndesitePlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+    public void onTrackEnd(Player player, AudioTrack track, AudioTrackEndReason endReason) {
         // memes
     }
 
-    public void onTrackException(AndesitePlayer player, AudioTrack track, Exception exception) {
+    public void onTrackException(Player player, AudioTrack track, Exception exception) {
         // memes
     }
 
-    public void onTrackStuck(AndesitePlayer player, AudioTrack track, long thresholdMs) {
+    public void onTrackStuck(Player player, AudioTrack track, long thresholdMs) {
         // memes
     }
 

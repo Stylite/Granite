@@ -1,5 +1,6 @@
 package bot.bricolo.granite;
 
+import bot.bricolo.granite.andesite.Player;
 import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 
 import javax.annotation.Nonnull;
@@ -13,7 +14,7 @@ public class JDAVoiceInterceptor implements VoiceDispatchInterceptor {
 
     @Override
     public void onVoiceServerUpdate(@Nonnull VoiceServerUpdate update) {
-        AndesitePlayer player = granite.getPlayer(update.getGuildId());
+        Player player = granite.getPlayer(update.getGuildId());
         if (player != null) {
             player.onVoiceServerUpdate(update);
         }

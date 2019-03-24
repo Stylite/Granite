@@ -18,7 +18,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-@SuppressWarnings("WeakerAccess")
 public class Utils {
     private static final AudioPlayerManager PLAYER_MANAGER;
 
@@ -55,7 +54,7 @@ public class Utils {
     }
 
     @SuppressWarnings("SameParameterValue")
-    static void setTimeout(Runnable runnable, int delay) {
+    public static void setTimeout(Runnable runnable, int delay) {
         new Thread(() -> {
             try {
                 Thread.sleep(delay);

@@ -1,13 +1,13 @@
 package bot.bricolo.granite.entities.events;
 
-import bot.bricolo.granite.AndesitePlayer;
+import bot.bricolo.granite.andesite.Player;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 public class TrackStartEvent extends PlayerEvent {
 
     private AudioTrack track;
 
-    public TrackStartEvent(AndesitePlayer player, AudioTrack track) {
+    public TrackStartEvent(Player player, AudioTrack track) {
         super(player);
         this.track = track;
     }
