@@ -50,7 +50,7 @@ And add the dependency
 ## Todos
 
  - [x] Make the client actually able to communicate with Andesite
- - [ ] Implement all functions provided by Andesite
+ - [x] Implement all functions provided by Andesite
  - [ ] Queue management through Granite itself
  - [ ] Load balancing (based on nodes load)
  - [ ] Add region factor to load balancing (EU traffic to EU nodes, US traffic to US nodes)
