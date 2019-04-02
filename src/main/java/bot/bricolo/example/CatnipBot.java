@@ -60,7 +60,7 @@ public class CatnipBot {
         assert guild != null;
 
         // We'll get a player for the guild, or create one if it does not exist.
-        Player player = granite.getOrCreatePlayer(guild);
+        Player player = granite.createPlayer(guild);
 
         // Let's parse the command
         String[] args = message.content().split(" ");

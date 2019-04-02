@@ -55,7 +55,7 @@ public class JDABot extends ListenerAdapter {
         if (event.getChannel().getType() != ChannelType.TEXT) return;
 
         // We'll get a player for the guild, or create one if it does not exist.
-        Player player = granite.getOrCreatePlayer(event.getGuild());
+        Player player = granite.createPlayer(event.getGuild());
 
         // Let's parse the command
         String[] message = event.getMessage().getContentStripped().split(" ");

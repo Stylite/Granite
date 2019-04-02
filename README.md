@@ -1,7 +1,7 @@
 # Granite
 ![Latest GitHub tag](https://img.shields.io/github/tag-date/BricoloDuDimanche/Granite.svg?style=flat-square)
 [![License](https://img.shields.io/github/license/BricoloDuDimanche/Granite.svg?style=flat-square)](https://github.com/BricoloDuDimanche/Granite/blob/master/LICENSE)
-[![Discord](https://img.shields.io/badge/chat-on%20Discord%20(%23granite)-7289DA.svg?style=flat-square)](https://discord.gg/2CkzJzM)
+[![Discord](https://img.shields.io/badge/chat-on%20Discord%20(%23granite)-7289DA.svg?style=flat-square)](https://discord.gg/V82UXC5)
 [![Donate](https://img.shields.io/badge/donate-Patreon-F96854.svg?style=flat-square)](https://www.patreon.com/Bowser65)
 
 A powerful, intuitive and easy to use client for [Andesite](https://github.com/natanbc/andesite-node) compatible with

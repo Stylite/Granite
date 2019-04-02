@@ -69,15 +69,15 @@ public class Granite {
         return players.get(guildId);
     }
 
-    public Player getOrCreatePlayer(Guild guild) {
-        return getOrCreatePlayer(guild.getId());
+    public Player createPlayer(Guild guild) {
+        return createPlayer(guild.getId());
     }
 
-    public Player getOrCreatePlayer(com.mewna.catnip.entity.guild.Guild guild) {
-        return getOrCreatePlayer(guild.id());
+    public Player createPlayer(com.mewna.catnip.entity.guild.Guild guild) {
+        return createPlayer(guild.id());
     }
 
-    public Player getOrCreatePlayer(String guildId) {
+    public Player createPlayer(String guildId) {
         return players.computeIfAbsent(guildId, Function -> new Player(this, guildId));
     }
 

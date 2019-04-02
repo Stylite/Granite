@@ -2,6 +2,7 @@ package bot.bricolo.granite.andesite;
 
 import bot.bricolo.granite.Granite;
 import bot.bricolo.granite.GraniteVersion;
+import bot.bricolo.granite.Utils;
 import bot.bricolo.granite.entities.AbstractSocket;
 import bot.bricolo.granite.entities.Region;
 import bot.bricolo.granite.exceptions.AudioTrackEncodingException;
@@ -69,6 +70,8 @@ public class Node extends AbstractSocket {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         granite.LOG.warn("Connection with node " + name + " closed (" + code + " " + reason + "; Was remote: " + remote + ")");
+        granite.LOG.warn("Trying to reconnect in 5s...");
+        Utils.setTimeout(this::connect, 5000);
     }
 
     @Override
