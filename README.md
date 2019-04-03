@@ -1,5 +1,7 @@
 # Granite
-![Latest GitHub tag](https://img.shields.io/github/tag-date/BricoloDuDimanche/Granite.svg?style=flat-square)
+[![Build Status](https://img.shields.io/travis/BricoloDuDimanche/Granite.svg?branch=master&style=flat-square&logo=travis)](https://travis-ci.org/BricoloDuDimanche/Granite)
+[![Javadoc](https://img.shields.io/badge/Javadoc-555.svg?style=flat-square&logo=java)](https://granite.bricolo.me)
+[![Latest GitHub tag](https://img.shields.io/github/tag-date/BricoloDuDimanche/Granite.svg?style=flat-square)](https://github.com/BricoloDuDimanche/Granite/releases)
 [![License](https://img.shields.io/github/license/BricoloDuDimanche/Granite.svg?style=flat-square)](https://github.com/BricoloDuDimanche/Granite/blob/master/LICENSE)
 [![Discord](https://img.shields.io/badge/chat-on%20Discord%20(%23granite)-7289DA.svg?style=flat-square)](https://discord.gg/V82UXC5)
 [![Donate](https://img.shields.io/badge/donate-Patreon-F96854.svg?style=flat-square)](https://www.patreon.com/Bowser65)

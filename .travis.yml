@@ -1,0 +1,27 @@
+language: java
+sudo: false
+install: true
+
+jdk:
+  - openjdk11
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+deploy:
+  - provider: pages
+    skip-cleanup: true
+    local-dir: api/build/docs/javadoc
+    github-token: $GITHUB_TOKEN
+    fqdn: granite.bricolo.me
+    on:
+      branch: master
+
+script:
+  - chmod +x gradlew
+  - ./gradlew build javadoc
