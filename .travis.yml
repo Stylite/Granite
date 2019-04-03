@@ -16,7 +16,7 @@ cache:
 deploy:
   - provider: pages
     skip-cleanup: true
-    local-dir: api/build/docs/javadoc
+    local-dir: build/docs/javadoc
     github-token: $GITHUB_TOKEN
     fqdn: granite.bricolo.me
     on:
