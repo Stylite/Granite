@@ -1,0 +1,8 @@
+bot.bricolo.example
+bot.bricolo.granite
+bot.bricolo.granite.andesite
+bot.bricolo.granite.entities
+bot.bricolo.granite.entities.events
+bot.bricolo.granite.entities.payload
+bot.bricolo.granite.entities.payload.filters
+bot.bricolo.granite.exceptions
