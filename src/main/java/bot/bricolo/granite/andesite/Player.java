@@ -152,11 +152,11 @@ public class Player {
         }
     }
 
-    public void onVoiceServerUpdate(@Nonnull com.mewna.catnip.entity.voice.VoiceServerUpdate update) {
+   /* public void onVoiceServerUpdate(@Nonnull com.mewna.catnip.entity.voice.VoiceServerUpdate update) {
         if (node != null && node.isOpen()) {
             node.send(new VoiceServerUpdate(update));
         }
-    }
+    } */
 
     //***********//
     // Internals //

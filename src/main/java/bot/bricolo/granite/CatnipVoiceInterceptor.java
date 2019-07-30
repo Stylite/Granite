@@ -11,12 +11,12 @@ public class CatnipVoiceInterceptor {
         this.granite = granite;
     }
 
-    public void onVoiceServerUpdate(VoiceServerUpdate update) {
+    /* public void onVoiceServerUpdate(VoiceServerUpdate update) {
         Player player = granite.getPlayer(update.guildId());
         if (player != null) {
             player.onVoiceServerUpdate(update);
         }
-    }
+    } */
 
     public void onVoiceStateUpdate(VoiceState update) {
         // yes
